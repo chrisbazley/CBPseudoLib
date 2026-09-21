@@ -1,0 +1,95 @@
+name: CMake on multiple platforms
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.os }} ${{ matrix.c_compiler }} ${{ matrix.build_type }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        build_type: [Release, Debug]
+        c_compiler: [gcc, clang, cl]
+        exclude:
+          - os: windows-latest
+            c_compiler: gcc
+          - os: windows-latest
+            c_compiler: clang
+          - os: ubuntu-latest
+            c_compiler: cl
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: >
+          cmake -S ${{ github.workspace }}
+          -B ${{ github.workspace }}/build
+          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DUSE_OPTIONAL=OFF
+
+      - name: Build
+        run: cmake --build ${{ github.workspace }}/build --config ${{ matrix.build_type }}
+
+  optional-clang:
+    name: _Optional Clang ${{ matrix.build_type }}
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [Release, Debug]
+
+    env:
+      OPTIONAL_CLANG_TAG: v1.0.7-optional
+      OPTIONAL_CLANG_PLATFORM: linux-x86_64
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download _Optional Clang
+        shell: bash
+        run: |
+          archive="clang+llvm-${OPTIONAL_CLANG_TAG}-${OPTIONAL_CLANG_PLATFORM}.tar.xz"
+          toolchain="$RUNNER_TEMP/optional-clang"
+          mkdir -p "$toolchain"
+          gh release download "$OPTIONAL_CLANG_TAG" \
+            --repo chrisbazley/llvm-project \
+            --pattern "$archive" \
+            --pattern "$archive.sha256" \
+            --dir "$RUNNER_TEMP"
+          cd "$RUNNER_TEMP"
+          sha256sum --check "$archive.sha256"
+          tar -xJf "$archive" -C "$toolchain"
+          echo "OPTIONAL_CLANG_ROOT=$toolchain" >> "$GITHUB_ENV"
+          echo "$toolchain/bin" >> "$GITHUB_PATH"
+
+      - name: Configure
+        shell: bash
+        run: |
+          cmake \
+            -S "$GITHUB_WORKSPACE" \
+            -B "$GITHUB_WORKSPACE/build" \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DCMAKE_C_COMPILER="$OPTIONAL_CLANG_ROOT/bin/clang" \
+            -DCLANG_TIDY_EXE="$OPTIONAL_CLANG_ROOT/bin/clang-tidy" \
+            -DUSE_OPTIONAL=ON \
+            -DENABLE_CLANG_TIDY=ON
+
+      - name: Build and analyze
+        shell: bash
+        run: cmake --build "$GITHUB_WORKSPACE/build" --parallel 2

@@ -1,0 +1,3 @@
+# Project:   CBPseudoLib
+LibName = CBPseudo
+ObjectList = PseudoEvnt PseudoExit PseudoFlex PseudoKern PseudoTbox PseudoWimp

@@ -1,0 +1,36 @@
+# Project:   CBPseudoLib
+include MakeROCom
+
+CC = gcc
+LibFile = ar
+StripBadPre = sed -r 's@/[A-Za-z]+:[^ ]*@@g'
+Delete = delete
+
+CCFlags = -g -c -IC: -mlibscl -mthrowback -Wall -Wextra -pedantic \
+          -std=c99 -MMD -MP -DACORN_C -DFORTIFY -DDEBUG_OUTPUT -o $@
+CCModuleFlags = $(CCFlags) -mmodule
+LibFileFlags = -rcs $@
+
+DebugObjects = $(addsuffix .o,$(ObjectList))
+ModuleObjects = $(addsuffix .oz,$(ObjectList))
+
+all: @.lib$(LibName)/a @.lib$(LibName)mod/a
+
+@.lib$(LibName)/a: $(DebugObjects)
+	$(LibFile) $(LibFileFlags) $(DebugObjects)
+
+@.lib$(LibName)mod/a: $(ModuleObjects)
+	$(LibFile) $(LibFileFlags) $(ModuleObjects)
+
+.SUFFIXES: .o .c .oz
+.c.o:
+	${CC} $(CCFlags) -MF $*T.d $<
+	$(StripBadPre) < $*T.d >$*.d
+	$(Delete) d.$*T
+.c.oz:
+	${CC} $(CCModuleFlags) -MF $*TZ.d $<
+	$(StripBadPre) < $*TZ.d >$*Z.d
+	$(Delete) d.$*TZ
+
+-include $(addsuffix .d,$(ObjectList))
+-include $(addsuffix Z.d,$(ObjectList))
