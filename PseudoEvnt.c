@@ -48,6 +48,8 @@
   CJB: 21-Sep-26: Declare SWI registers with an initialiser.
                   Ensure only void * is converted to intptr_t.
   CJB: 21-Sep-26: Move this interface from CBDebugLib to CBPseudoLib.
+  CJB: 21-Sep-26: Abort if a handler being deregistered was not registered,
+                  even when assertions are disabled.
 */
 
 #undef FORTIFY /* Prevent macro redirection of event_... calls to
@@ -56,6 +58,7 @@
 /* ISO library headers */
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
@@ -346,6 +349,8 @@ _Optional _kernel_oserror *pseudo_event_deregister_toolbox_handler(ObjectId obje
 
   _Optional LinkedListItem *item = linkedlist_for_each(&tb_handlers, toolbox_handler_matches, &to_match);
   assert(item != NULL);
+  if (item == NULL)
+    abort();
   linkedlist_remove(&tb_handlers, &*item);
   Fortify_free(CONTAINER_OF(&*item, PseudoEvent_Toolbox_Handler, list_item),
                file, line);
@@ -437,6 +442,8 @@ _Optional _kernel_oserror *pseudo_event_deregister_message_handler(int msg_no, W
 
   _Optional LinkedListItem *item = linkedlist_for_each(&msg_handlers, message_handler_matches, &to_match);
   assert(item != NULL);
+  if (item == NULL)
+    abort();
   linkedlist_remove(&msg_handlers, &*item);
   Fortify_free(CONTAINER_OF(&*item, PseudoEvent_Message_Handler, list_item),
                file, line);
@@ -499,6 +506,8 @@ _Optional _kernel_oserror *pseudo_event_deregister_wimp_handler(ObjectId object_
 
   _Optional LinkedListItem *item = linkedlist_for_each(&wimp_handlers, wimp_handler_matches, &to_match);
   assert(item != NULL);
+  if (item == NULL)
+    abort();
   linkedlist_remove(&wimp_handlers, &*item);
   Fortify_free(CONTAINER_OF(&*item, PseudoEvent_Wimp_Handler, list_item),
                file, line);
