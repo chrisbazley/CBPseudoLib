@@ -111,6 +111,7 @@ static bool reset_object_record(LinkedList *list, LinkedListItem *item, void *ar
     CONTAINER_OF(item, PseudoTbox_Object, list_item);
 
   assert(list == &objects);
+  NOT_USED(list);
   NOT_USED(arg);
   record->is_showing = false;
   return false;
@@ -159,6 +160,7 @@ static bool template_name_matches(LinkedList *list, LinkedListItem *item, void *
   int nbytes;
 
   assert(list == &objects);
+  NOT_USED(list);
   assert(record != NULL);
   assert(template_name != NULL);
 
@@ -219,6 +221,7 @@ static bool object_id_matches(LinkedList *list, LinkedListItem *item, void *arg)
   const ObjectId * const id = arg;
 
   assert(list == &objects);
+  NOT_USED(list);
   assert(record != NULL);
   assert(id != NULL);
   return *id == record->object_id;

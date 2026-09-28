@@ -332,7 +332,7 @@ static bool toolbox_handler_matches(LinkedList *list, LinkedListItem *item, void
   const PseudoEvent_Toolbox_Handler * const to_match = arg;
 
   assert(list == &tb_handlers);
-  (void)list;
+  NOT_USED(list);
   assert(record != NULL);
   assert(to_match != NULL);
   return to_match->object_id == record->object_id &&
@@ -427,7 +427,7 @@ static bool message_handler_matches(LinkedList *list, LinkedListItem *item, void
   const PseudoEvent_Message_Handler * const to_match = arg;
 
   assert(list == &msg_handlers);
-  (void)list;
+  NOT_USED(list);
   assert(record != NULL);
   assert(to_match != NULL);
   return to_match->msg_no == record->msg_no &&
@@ -491,7 +491,7 @@ static bool wimp_handler_matches(LinkedList *list, LinkedListItem *item, void *a
   const PseudoEvent_Wimp_Handler * const to_match = arg;
 
   assert(list == &wimp_handlers);
-  (void)list;
+  NOT_USED(list);
   assert(record != NULL);
   assert(to_match != NULL);
   return to_match->object_id == record->object_id &&
