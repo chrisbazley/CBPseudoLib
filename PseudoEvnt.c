@@ -225,7 +225,7 @@ _Optional _kernel_oserror *pseudo_event_poll(_Optional int *event_code, _Optiona
 _Optional _kernel_oserror *pseudo_event_wait_for_idle(void)
 {
   unsigned int count = 511;
-  int event_code;
+  int event_code = Wimp_ENull;
   _Optional _kernel_oserror *e;
 
   do

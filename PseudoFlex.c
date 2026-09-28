@@ -294,7 +294,7 @@ int PseudoFlex_midextend(flex_ptr anchor, int at, int by, const char *file, unsi
 
     DEBUG("PseudoFlex: Extended/truncated block %p anchored at %p, "
           "by %d bytes at offset %d, new address %p", *anchor, (void *)anchor,
-          by, at, new_addr);
+          by, at, (void *)new_addr);
 
     /* Update the anchor to point at the resized heap block */
     *anchor = &*new_addr;
