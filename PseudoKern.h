@@ -32,11 +32,15 @@ History:
   CJB: 24-Aug-26: Use the _Optional qualifier for referenced types where
                   the pointer can be null.
   CJB: 21-Sep-26: Move this interface from CBDebugLib to CBPseudoLib.
+  CJB: 28-Sep-26: Preserve pointer-sized OS_GBPB handles.
 
 */
 
 #ifndef PseudoKern_h
 #define PseudoKern_h
+
+/* ISO library headers */
+#include <stdint.h>
 
 /* Acorn C/C++ library headers */
 #include <kernel.h>
@@ -121,7 +125,7 @@ int pseudokern_osbget(unsigned handle, const char *file, unsigned long line);
 int pseudokern_osbput(int ch, unsigned handle, const char *file,
                       unsigned long line);
 
-int pseudokern_osgbpb(int op, unsigned handle, _kernel_osgbpb_block *inout,
+int pseudokern_osgbpb(int op, uintptr_t handle, _kernel_osgbpb_block *inout,
                       const char *file, unsigned long line);
 
 int pseudokern_osword(int op, int *data, const char *file, unsigned long line);
