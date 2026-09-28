@@ -30,6 +30,7 @@
   CJB: 21-Sep-26: Declare SWI registers with an initialiser.
                   Ensure only void * is converted to intptr_t.
   CJB: 21-Sep-26: Move this interface from CBDebugLib to CBPseudoLib.
+  CJB: 28-Sep-26: Preserve pointer-sized OS_GBPB handles.
 */
 
 #undef FORTIFY /* Prevent macro redirection of _kernel_... calls to
@@ -178,7 +179,7 @@ int pseudokern_osbput(int ch,
 }
 
 int pseudokern_osgbpb(int op,
-                      unsigned handle,
+                      uintptr_t handle,
                       _kernel_osgbpb_block *inout,
                       const char *file,
                       unsigned long line)
