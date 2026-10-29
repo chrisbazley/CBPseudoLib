@@ -43,6 +43,7 @@ History:
   CJB: 24-Aug-26: Use the _Optional qualifier for referenced types where
                   the pointer can be null.
   CJB: 21-Sep-26: Move this interface from CBDebugLib to CBPseudoLib.
+  CJB: 29-Oct-26: Allow null buffers in button_get_value size queries.
 */
 
 #ifndef PseudoTbox_h
@@ -325,7 +326,8 @@ _Optional _kernel_oserror *pseudo_gadget_get_bbox(unsigned int flags, ObjectId w
 
 _Optional _kernel_oserror *pseudo_button_set_value(unsigned int flags, ObjectId window, ComponentId button, char *value, const char *file, unsigned long line);
 
-_Optional _kernel_oserror *pseudo_button_get_value(unsigned int flags, ObjectId window, ComponentId button, char *buffer, int buff_size, _Optional int *nbytes, const char *file, unsigned long line);
+/* A null query buffer makes the input buffer size irrelevant. */
+_Optional _kernel_oserror *pseudo_button_get_value(unsigned int flags, ObjectId window, ComponentId button, _Optional char *buffer, int buff_size, _Optional int *nbytes, const char *file, unsigned long line);
 
 _Optional _kernel_oserror *pseudo_button_set_validation(unsigned int flags, ObjectId window, ComponentId button, char *value, const char *file, unsigned long line);
 
