@@ -57,6 +57,7 @@
   CJB: 21-Sep-26: Declare SWI registers with an initialiser.
                   Ensure only void * is converted to intptr_t.
   CJB: 21-Sep-26: Move this interface from CBDebugLib to CBPseudoLib.
+  CJB: 29-Oct-26: Allow null buffers in button_get_value size queries.
 */
 
 #undef FORTIFY /* Prevent macro redirection of toolbox_... calls to
@@ -756,7 +757,7 @@ _Optional _kernel_oserror *pseudo_button_set_value(unsigned int flags, ObjectId 
   return e;
 }
 
-_Optional _kernel_oserror *pseudo_button_get_value(unsigned int flags, ObjectId window, ComponentId button, char *buffer, int buff_size, _Optional int *nbytes, const char *file, unsigned long line)
+_Optional _kernel_oserror *pseudo_button_get_value(unsigned int flags, ObjectId window, ComponentId button, _Optional char *buffer, int buff_size, _Optional int *nbytes, const char *file, unsigned long line)
 {
   _Optional _kernel_oserror *e = pseudokern_fail(file, line);
 

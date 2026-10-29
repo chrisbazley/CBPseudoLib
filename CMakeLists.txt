@@ -109,3 +109,8 @@ target_link_libraries(CBPseudo PUBLIC
 install(TARGETS CBPseudo
     ARCHIVE DESTINATION lib
     PUBLIC_HEADER DESTINATION include)
+
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    add_library(CBPseudoHeaders OBJECT tests/Headers.c)
+    target_link_libraries(CBPseudoHeaders PRIVATE CBPseudo)
+endif()
