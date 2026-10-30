@@ -16,6 +16,12 @@ The public header names are unchanged from their former home in CBDebugLib:
 
 CBPseudoLib depends on CBUtilLib, CBDebugLib, Fortify and OptionalAcornC.
 
+In CMake, Fortify is a private implementation dependency. Linking `CBPseudo`
+does not define `FORTIFY` in the client. A client that wants the pseudo
+headers to intercept its calls must also link the `Fortify` target (normally
+through its own `USE_FORTIFY` option). Both client configurations are compiled
+by the standalone header checks.
+
 The library can be built with CMake, GNU Make on Linux, GNU Make on RISC OS,
 or Acorn Make Utility using `NMakefile`.
 
