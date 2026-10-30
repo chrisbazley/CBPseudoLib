@@ -104,13 +104,23 @@ target_link_libraries(CBPseudo PUBLIC
     OptionalAcornC
     CBUtil
     CBDebug
-    Fortify)
+)
+
+# The pseudo implementations use Fortify, but clients select interception
+# themselves by linking Fortify. A static library still carries this private
+# dependency through to the final link without exporting FORTIFY to clients.
+target_link_libraries(CBPseudo PRIVATE Fortify)
 
 install(TARGETS CBPseudo
     ARCHIVE DESTINATION lib
     PUBLIC_HEADER DESTINATION include)
 
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
-    add_library(CBPseudoHeaders OBJECT tests/Headers.c)
+    add_library(CBPseudoHeaders OBJECT tests/Headers.c tests/Configuration.c)
     target_link_libraries(CBPseudoHeaders PRIVATE CBPseudo)
+    target_compile_definitions(CBPseudoHeaders PRIVATE EXPECT_FORTIFY=0)
+
+    add_library(CBPseudoFortifiedHeaders OBJECT tests/Headers.c tests/Configuration.c)
+    target_link_libraries(CBPseudoFortifiedHeaders PRIVATE CBPseudo Fortify)
+    target_compile_definitions(CBPseudoFortifiedHeaders PRIVATE EXPECT_FORTIFY=1)
 endif()
