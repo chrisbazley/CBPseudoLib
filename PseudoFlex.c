@@ -160,7 +160,8 @@ void PseudoFlex_free(flex_ptr anchor, const char *file, unsigned long line)
 
     /* Free the actual heap block */
     Fortify_free(*anchor, file, line);
-    *anchor = 0;
+    /* The legacy flex interface deliberately uses void ** for anchors. */
+    *anchor = (char *)NULL;
   }
 }
 
@@ -327,7 +328,7 @@ int PseudoFlex_reanchor(flex_ptr to, flex_ptr from)
           (void *)from, (void *)to);
 
     *to = *from; /* copy the heap block pointer from old anchor to new */
-    *from = 0; /* prevent reuse of old anchor */
+    *from = (char *)NULL; /* prevent reuse of old anchor */
 
     return 1; /* success */
   } else {
@@ -440,3 +441,4 @@ static _Optional PseudoFlexRecord *find_anchor(flex_ptr anchor)
 
   return pfr;
 }
+
