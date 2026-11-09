@@ -44,6 +44,7 @@ History:
                   the pointer can be null.
   CJB: 21-Sep-26: Move this interface from CBDebugLib to CBPseudoLib.
   CJB: 29-Oct-26: Allow null buffers in button_get_value size queries.
+  CJB: 09-Nov-26: Match saveas_set_file_name's read-only filename parameter.
 */
 
 #ifndef PseudoTbox_h
@@ -278,7 +279,7 @@ _Optional _kernel_oserror *pseudo_toolbox_get_object_state(unsigned int flags, O
 
 _Optional _kernel_oserror *pseudo_iconbar_get_icon_handle(unsigned int flags, ObjectId iconbar, _Optional int *icon_handle, const char *file, unsigned long line);
 
-_Optional _kernel_oserror *pseudo_saveas_set_file_name(unsigned int flags, ObjectId saveas, char *file_name, const char *file, unsigned long line);
+_Optional _kernel_oserror *pseudo_saveas_set_file_name(unsigned int flags, ObjectId saveas, const char *file_name, const char *file, unsigned long line);
 
 _Optional _kernel_oserror *pseudo_saveas_set_file_type(unsigned int flags, ObjectId saveas, int file_type, const char *file, unsigned long line);
 
