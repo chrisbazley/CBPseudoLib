@@ -58,6 +58,7 @@
                   Ensure only void * is converted to intptr_t.
   CJB: 21-Sep-26: Move this interface from CBDebugLib to CBPseudoLib.
   CJB: 29-Oct-26: Allow null buffers in button_get_value size queries.
+  CJB: 09-Nov-26: Match saveas_set_file_name's read-only filename parameter.
 */
 
 #undef FORTIFY /* Prevent macro redirection of toolbox_... calls to
@@ -420,7 +421,7 @@ _Optional _kernel_oserror *pseudo_iconbar_get_icon_handle(unsigned int flags, Ob
   return e;
 }
 
-_Optional _kernel_oserror *pseudo_saveas_set_file_name(unsigned int flags, ObjectId saveas, char *file_name, const char *file, unsigned long line)
+_Optional _kernel_oserror *pseudo_saveas_set_file_name(unsigned int flags, ObjectId saveas, const char *file_name, const char *file, unsigned long line)
 {
   _Optional _kernel_oserror *e = pseudokern_fail(file, line);
 
